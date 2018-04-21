@@ -13,5 +13,8 @@ set file=%1%
 set purefile=%~n1
 )
 
-cl65 -O -o %purefile%.prg -t c64 %file%
+rem cl65 -c -t c64 %file% -o %purefile%.o
+rem cl65 -c -t c64  %~dp0/musicplayer.s -o musicplayer.o
+rem cl65 -t c64 -C %~dp0/c64-himem-c0.cfg -O -o %purefile%.prg %~dp0/musicplayer.o %purefile%.o
+cl65 -C %~dp0/c64-himem-c0.cfg -O -o %purefile%.prg -t c64 %file%
 @pause
