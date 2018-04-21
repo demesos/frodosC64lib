@@ -165,6 +165,9 @@ void game_loop(void)
         showSprite(si+1);
      }
      
+     //reset collision
+     __asm__ ("lda 53278");
+     
      while(1) {
      	unsigned char key_space;
      	unsigned char collision;
@@ -425,7 +428,8 @@ void initSprites(unsigned char nsheep, unsigned char nsnakes)
 
 void spriteRun(void)
 {
-    unsigned int x,i;
+    unsigned int x;
+    volatile unsigned int i;
     unsigned char y,animation;
     initSprites(1,0);
     showSprite(1);
