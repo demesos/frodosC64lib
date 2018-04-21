@@ -11,8 +11,11 @@
 /*general functions for memory access and interrupt control */
 #define poke(addr,val)	(*(unsigned char *)(addr)=(val))
 #define peek(addr) (*(unsigned char *)(addr))
-#define disable_int poke(56334u, peek(56334u) & 254)  //deactivate interrupts
-#define enable_int poke(56334u, peek(56334u) | 1)  //activate interrupts
+//#define disable_int poke(56334u, peek(56334u) & 254)  //deactivate interrupts
+//#define enable_int poke(56334u, peek(56334u) | 1)  //activate interrupts
+#define disable_int __asm__ ("sei")
+#define enable_int __asm__ ("cli")
+
 void setVICbank(char bank);
 void setVICcharset(char index);
 void setVICscreen(unsigned int index);
