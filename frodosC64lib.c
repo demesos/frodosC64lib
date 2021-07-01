@@ -19,7 +19,7 @@ void delayms(int delay)
     globalSubX = delay;
     __asm__ ("ldx %v",globalSubX);
     __asm__ ("lda %v+1",globalSubX);
-    __asm__ ("dllp0: ldy #$b6");
+    __asm__ ("dllp0: ldy #$b3");
     __asm__ ("dllp1: dey");
     __asm__ ("bne dllp1");
     __asm__ ("dex");
@@ -27,6 +27,32 @@ void delayms(int delay)
     __asm__ ("sec");
     __asm__ ("sbc #$01");
     __asm__ ("bpl dllp0");
+}
+
+/* Wait delay in ms (with option to skip delay by pressing fire button 2) */
+void delaymsunlessfire(int delay)
+{
+    globalSubX = delay;
+
+    __asm__ ("ldx %v",globalSubX);
+    __asm__ ("lda %v+1",globalSubX);
+    __asm__ ("dluflp0: pha");
+    __asm__ ("dluflp1: lda $dc00");
+    __asm__ ("and #$10");
+    __asm__ ("bne dlufskp");
+    __asm__ ("pla");
+    __asm__ ("lda #$ff");
+    __asm__ ("bne dlufexitlp");
+    __asm__ ("dlufskp: ldy #$b1");
+    __asm__ ("dluflp2: dey");
+    __asm__ ("bne dluflp2");
+    __asm__ ("dex");
+    __asm__ ("bne dluflp1");
+    __asm__ ("pla");
+    __asm__ ("sec");
+    __asm__ ("sbc #$01");
+    __asm__ ("bpl dluflp0");
+    __asm__ ("dlufexitlp:");
 }
 
 /* n being the sprite number (0..7) */

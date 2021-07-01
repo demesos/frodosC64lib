@@ -88,6 +88,7 @@ void updateSpriteAttributes(char n);
 /* misc functions */
 void blinkwait(unsigned int seconds,unsigned char color);
 void delayms(int delay);
+void delaymsunlessfire(int delay);
 void wait_end_of_frame();
 int getkey();
 void locate_cursor(uint8_t x,uint8_t y);
