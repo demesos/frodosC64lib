@@ -1,4 +1,2 @@
 # frodosC64lib
-Code for C64 programs, mostly in C
-
-Current version as of April 2018 is in pre-alpha status.
+Some utility functions and macros written in cc65 code style for c64 programs
