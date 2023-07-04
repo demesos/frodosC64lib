@@ -81,7 +81,6 @@ const unsigned char winningData[] =
 {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	
 0,0,0,0,1,0,1,0,0,1,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,0,0,
 0,0,0,0,1,0,1,0,1,3,2,1,0,1,0,0,1,0,0,0,1,0,0,0,1,0,1,2,3,1,0,1,1,0,1,0,1,0,0,0,
 0,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,1,0,1,1,0,1,0,1,0,0,0,
@@ -106,8 +105,8 @@ void displayTitle(const unsigned char *bitmap,unsigned char color,size_t count)
         233 //triangle right low
       };
 
-    pDest= SCREEN_RAM;
-    pDest2 = COLOR_RAM;
+    pDest= (unsigned char *)SCREEN_RAM;
+    pDest2 = (unsigned char *)COLOR_RAM;
     for (i=0; i<count; i++) //sizeof(bitmap)
     {
         if (bitmap[i]) {

@@ -20,6 +20,7 @@
    (because loading address + 0x801 - 2bytes = 4096) 
    and the original three bytes are restored after start. */
 
+#include "frodosC64lib.h"
 #include "frodosC64lib.c"
 
 /*-----------------------------------------------------------------------*/
@@ -39,7 +40,7 @@
 #define MAXLIVES 3
 #define LEVELTIME 30*TIMEUNIT
 
-#include "velcro-assets.c"
+#include "velcro-assets.inc"
 
 void copy_charset(void);
 void titlescreen(void);
@@ -124,8 +125,8 @@ void game_loop(void)
 
      timer=LEVELTIME;
      nsheepleft=nsheep;
-     barnx=3+random8 % 35;
-     barny=5+random8 % 19;
+     barnx=3+random8() % 35;
+     barny=5+random8() % 19;
 		      
      clrscr();
      textcolor (COLOR_BLACK);
@@ -148,9 +149,9 @@ void game_loop(void)
     
      //place sheep       
      for(si=0;si<nsheep;si++) {
-        sheepx[si]=60+random8;
-        sheepy[si]=56+(random8 & 0xBF);
-        sheepa[si]=random8;
+        sheepx[si]=60+random8();
+        sheepy[si]=56+(random8() & 0xBF);
+        sheepa[si]=random8();
         sheepst[si]=0;
         setSpriteXY(si+1,sheepx[si],sheepy[si]);
         showSprite(si+1);
@@ -158,9 +159,9 @@ void game_loop(void)
      
      //place snakes       
      for(si=nsheep;si<nsheep+nsnakes;si++) {
-        snakex[si]=60+random8;
-        snakey[si]=56+(random8 & 0xBF);
-        snakea[si]=random8;
+        snakex[si]=60+random8();
+        snakey[si]=56+(random8() & 0xBF);
+        snakea[si]=random8();
         setSpriteXY(si+1,snakex[si],snakey[si]);
         showSprite(si+1);
      }
@@ -231,7 +232,7 @@ void game_loop(void)
            if (sheepst[si]==0) {//sheep is uncaught
               
               if ((animation & 0x07)==si) { //load balancing with sprite number
-                angle=sheepa[si] + 15-(random8 & 31);
+                angle=sheepa[si] + 15-(random8() & 31);
                 sheepx[si] += sintable[angle]>>7;
                 sheepy[si] -= costable[angle]>>7;
                 if (sheepx[si]>320) 
@@ -284,7 +285,7 @@ void game_loop(void)
         //snake control
         for(si=nsheep;si<nsheep+nsnakes;si++) {
             if ((animation & 0x07)==3) { //load balancing with sprite number
-                angle=snakea[si] + 7-(random8 & 15);
+                angle=snakea[si] + 7-(random8() & 15);
                 snakex[si] += sintable[angle]>>7;
                 snakey[si] -= costable[angle]>>7;
                 if (snakex[si]>320) 
@@ -376,9 +377,10 @@ void init(void)
     copy_charset();
     cprintf("done\r\n");
     cprintf("Switch charset...");
-    setVICbank(0); 
-    setVICscreen(0);
-    setVICcharset(3);
+    setVICbank(3);
+    setVICscreen(0xc000);
+    setVICcharset(0xd800);
+    poke(648,192);
     clrscr();
     cprintf("Copying charset...done\r\n");
     cprintf("Switch charset...done\r\n");
@@ -511,7 +513,7 @@ void copy_charset(void)
 	 }
 
      //add custom characters beginning with index 128
-     pDest=(char*)53248u+3072;
+     pDest=(unsigned char*)53248u+3072;
      for (i=0; i<sizeof(charsetData); i++)
          pDest[i]=charsetData[i];
 
@@ -521,15 +523,15 @@ void copy_charset(void)
 
 void drawGameScreen()
 {
-     char *pScreen=SCREEN_RAM+40;
-     char *pColor=COLOR_RAM+40;
+     unsigned char *pScreen=(unsigned char *)SCREEN_RAM+40;
+     unsigned char *pColor =(unsigned char *)COLOR_RAM+40;
      unsigned int i;
      
      poke(53281u,7); //background color is yellow
      for(i=0;i<1024-40;i++) {
         pColor[i]=5; //green
-     	if ((random8 & 0x07) == 0) {
-     	   if ((random8^i) & 0x01) 
+     	if ((random8() & 0x07) == 0) {
+     	   if ((random8()^i) & 0x01) 
      	      pScreen[i]=FLOWER;
      	   else
      	      pScreen[i]=FLOWER+1;
@@ -544,8 +546,8 @@ void drawGameScreen()
 void drawBarn(int x,int y)
 {
      int i;
-     char *pScreen=SCREEN_RAM+40*y-160+x-2;
-     char *pColor=COLOR_RAM+40*y-160+x-2;
+     unsigned char *pScreen=(unsigned char *)SCREEN_RAM+40*y-160+x-2;
+     unsigned char *pColor =(unsigned char *)COLOR_RAM+40*y-160+x-2;
      for (i=0;i<4;i++) {
         pScreen[i]=ROOF;
         pColor[i]=2;

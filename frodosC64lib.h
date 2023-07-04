@@ -11,8 +11,6 @@
 #include <conio.h>
 #include <stdint.h>
 
-#include "../src/presets.h"
-
 #ifndef VIC_BASE
   #define VIC_BASE 0xd000
 #endif
@@ -24,8 +22,6 @@
 #ifndef VIC_BANK
   #define VIC_BANK 0x0000
 #endif
-
-
 
 /*IO functions*/
 #define get() (asm("jsr $FFE4"),asm("ldx #$00"),__AX__)
